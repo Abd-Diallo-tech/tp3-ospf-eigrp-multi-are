@@ -1,0 +1,17 @@
+# Fichiers temporaires Windows
+Thumbs.db
+Desktop.ini
+
+# Dossier de la corbeille Windows
+$RECYCLE.BIN/
+
+# Dossiers Visual Studio Code
+.vscode/
+
+# Fichiers temporaires
+*.tmp
+*.temp
+*.bak
+
+# Journaux
+*.log
