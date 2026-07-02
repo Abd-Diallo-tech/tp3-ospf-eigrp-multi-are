@@ -2,7 +2,7 @@
 
 ## 📝 Présentation
 
-Ce projet a été réalisé dans le cadre du module **Routage et Communitation** de la Licence 3 Systèmes, Réseaux et Télécommunications.
+Ce projet a été réalisé dans le cadre du module **Routage et Commutation** de la Licence 3 Systèmes, Réseaux et Télécommunications.
 
 L'objectif de ce TP est de mettre en place un réseau utilisant le protocole **OSPF** sur plusieurs aires, puis de connecter ces différentes aires à l'aide du protocole **EIGRP**. Pour permettre l'échange des routes entre les deux protocoles, une **redistribution bidirectionnelle** est configurée sur les routeurs de bordure.
 
