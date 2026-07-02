@@ -1,0 +1,82 @@
+1. Configurations de base 
+NB : j’ai utilisé un mot de passe très faible ici pour le line console et vty mais il est déconseiller de le faire donc dans un vrai réseau il ne faut jamais utiliser ce genre de mot de passe et jamais le divulguer. 
+
+1.1. Passer en mode privilégié  
+Router>enable 
+
+1.2. Passer en mode de configuration globale
+Router#configure terminal 
+
+1.3. Renommer le routeur
+Router(config)#hostname LAB_A
+
+1.4. Attribution de mot passe pour l’accès par console et ssh ou telnet et pour passe en mode privilégie 
+LAB_A(config)#line console 0
+LAB_A(config-line)#password 1234
+LAB_A(config-line)#exit
+LAB_A(config)#line vty 0 4
+LAB_A(config-line)#password 1234
+LAB_A(config-line)#exit
+LAB_A(config)#service password-encryption 
+LAB_A(config)#enable secret 1234
+LAB_A(config)#
+
+1.5. Configuration des interfaces du routeur
+LAB_A (config)#interface gigabitEthernet 0/0
+LAB_A (config-if)#ip address 192.168.7.253 255.255.255.0
+LAB_A (config-if)#no shutdown
+LAB_A(config-if)exit
+LAB_A (config-if)#
+LAB_A (config)#interface gigabitEthernet 0/1
+LAB_A (config-if)#ip address 192.168.2.254 255.255.255.0
+LAB_A (config-if)#no shutdown
+LAB_A(config-if)exit
+LAB_A (config-if)#
+LAB_A (config)#interface serial 0/1/0
+LAB_A (config-if)#ip address 192.168.8.254 255.255.255.0
+LAB_A (config-if)#no shutdown
+LAB_A(config-if)exit
+LAB_A (config-if)#
+
+
+
+2. Mise en œuvre du routage OSPF
+LAB_A(config)#router ospf 1
+LAB_A(config-router)#network 192.168.7.0 0.0.0.255 area 2
+LAB_A(config-router)#network 192.168.8.0 0.0.0.255 area 2
+LAB_A(config-router)#exit
+LAB_A(config)#
+2.1. Création d’une interface de bouclage appelée loopback 0
+LAB_A(config)#interface loopback 0
+LAB_A(config-if)#ip address 1.1.1.1 255.255.255.255
+LAB_A(config-if)#exit
+LAB_A(config)#router ospf 1
+LAB_A(config-router)#router
+LAB_A(config-router)#router-id 1.1.1.1
+LAB_A(config-router)#end
+LAB_A(config)#end
+LAB_A#clear ip ospf process
+Reset ALL OSPF processes? [no]: yes
+LAB_A#
+
+3. Activation du routage EIGRP entre les Aires OSPF
+LAB_A(config)#router eigrp 100
+LAB_A(config-router)#network 192.168.2.0 0.0.0.255
+LAB_A(config-router)#no auto-summary 
+LAB_A(config-router)#exit
+LAB_A(config)#
+LAB_A(config)#router eigrp 100
+LAB_A(config-router)#redistribute ospf 1 metric 10000 100 255 1 1500
+LAB_A(config-router)#exit
+LAB_A(config)#router ospf 1
+LAB_A(config-router)#redistribute eigrp 100 subnets
+LAB_A(config-router)#exit
+LAB_A(config)#
+
+4. Sauvegarder 
+LAB_A(config)#end
+LAB_A#copy running-config startup-config 
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+LAB_A#
